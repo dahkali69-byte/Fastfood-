@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>F Food — Premium Single Page</title>
+
+<style>
+  /* ================= Reset & Root ================= */
+  :root{
+    --bg-dark:#0b0f14;
+    --bg-light:#fffaf3;
+    --glass: rgba(255,255,255,0.04);
+    --glass-strong: rgba(255,255,255,0.06);
+    --accent-warm:#ff7a18;
+    --accent-neon:#ffb86b;
+    --gold-1: #f6d365;
+    --gold-2: #fda085;
+    --muted: #cbd5dd;
+    --card-radius:16px;
+    --glass-blur:8px;
+    --soft: #fff2e8;
+  }
+
+  /* Light theme switches on .light on body */
+  body{font-family:Inter, "Segoe UI", system-ui, Arial; margin:0; -webkit-font-smoothing:antialiased;}
+  body {
+    min-height:100vh;
+    background:
+      radial-gradient(800px 250px at 10% 12%, rgba(255,122,24,0.06), transparent 10%),
+      linear-gradient(180deg, var(--bg-dark) 0%, #071019 100%);
+    color:var(--muted);
+    padding-bottom:80px;
+  }
+  body.light{
+    background:
+      radial-gradient(600px 200px at 90% 15%, rgba(255,122,24,0.06), transparent 10%),
+      linear-gradient(180deg, var(--bg-light) 0%, #fff7ef 100%);
+    color:#5b4638;
+  }
+
+  /* Layout wrap */
+  .wrap{max-width:1180px;margin:28px auto;padding:0 20px;}
+
+  /* =============== Top header =============== */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+  .logo{
+    width:64px;height:64px;border-radius:12px;
+    background:linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:var(--accent-warm);
+    border:1px solid rgba(255,255,255,0.03);backdrop-filter: blur(var(--glass-blur));box-shadow:0 8px 28px rgba(0,0,0,0.5);
+  }
+  .brand .title{line-height:1}
+  .brand .name{display:block;font-size:18px;color:var(--accent-neon);font-weight:800}
+  .brand .tag{display:block;font-size:12px;opacity:.9}
+
+  .controls{display:flex;align-items:center;gap:12px}
+
+  /* Search (glass + pastel) */
+  .search{
+    display:flex;align-items:center;border-radius:12px;padding:8px 10px;gap:8px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);
+    backdrop-filter: blur(var(--glass-blur));
+  }
+  body.light .search{background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.6));border:1px solid rgba(0,0,0,0.06)}
+  .search input{border:0;background:transparent;outline:none;padding:8px 6px;width:240px;color:inherit}
+  .search button{border-radius:10px;padding:8px 12px;border:0;background:linear-gradient(90deg,var(--accent-warm),#ffd57f);cursor:pointer;font-weight:700;color:#111}
+
+  .action-btn{padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;cursor:pointer}
+  .order{background: linear-gradient(90deg,var(--gold-1),var(--gold-2)); color:#1a1306;font-weight:800;border:0;box-shadow:0 10px 30px rgba(250,170,60,0.12)}
+
+  .theme-toggle{padding:8px 10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+
+  /* ================= Main grid ================= */
+  .main{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start}
+
+  /* Left category (glass card) */
+  .category{
+    border-radius:var(--card-radius);padding:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(var(--glass-blur));box-shadow:0 18px 40px rgba(0,0,0,0.6)
+  }
+  .category h4{color:var(--accent-neon);margin-bottom:10px}
+  .category ul{list-style:none;padding:0}
+  .category li{padding:10px;border-radius:10px;margin-bottom:10px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .18s}
+  .category li:hover{transform:translateX(6px);background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
+
+  /* right column top nav row */
+  .nav-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .menu{display:flex;gap:18px;align-items:center}
+  .menu a{color:inherit;text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:700;transition:all .18s}
+  .menu a:hover{transform:translateY(-4px);background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))}
+
+  /* hero (glass-banner) */
+  .hero{display:flex;gap:18px;padding:20px;border-radius:16px;overflow:hidden;align-items:center;
+    background: linear-gradient(120deg, rgba(255,122,24,0.08), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);backdrop-filter: blur(var(--glass-blur));box-shadow:0 18px 50px rgba(2,6,12,0.7)
+  }
+  .hero .copy{flex:1}
+  .hero h1{color:#fff;font-size:34px;margin-bottom:8px;text-shadow:0 6px 20px rgba(0,0,0,0.6)}
+  .hero p{opacity:0.9;line-height:1.5;margin-bottom:14px}
+  .cta{display:flex;gap:12px}
+  .cta a{padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:800}
+  .primary{background:linear-gradient(90deg,var(--gold-1),var(--gold-2));color:#1a1208}
+  .secondary{background:transparent;border:1px solid rgba(255,255,255,0.05);color:inherit}
+
+  .visual{width:380px;height:220px;border-radius:12px;overflow:hidden;flex-shrink:0;box-shadow:0 12px 30px rgba(0,0,0,0.5)}
+  .visual img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.9,.2,1)}
+  .hero:hover .visual img{transform:scale(1.06)}
+
+  /* features row (playful soft cards) */
+  .features{display:flex;gap:14px;margin:26px 0}
+  .feature-card{flex:1;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);text-align:center;transition:transform .25s,box-shadow .25s}
+  .feature-card:hover{transform:translateY(-10px);box-shadow:0 24px 60px rgba(0,0,0,0.6)}
+  .feature-card h5{color:var(--accent-neon);margin-bottom:8px}
+
+  /* Products grid (ecommerce look) */
+  .products{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+  .product{border-radius:14px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);transition:transform .28s,box-shadow .28s;position:relative;display:flex;flex-direction:column;gap:12px}
+  .product:hover{transform:translateY(-12px);box-shadow:0 40px 80px rgba(2,6,12,0.7)}
+  .product .img{height:170px;border-radius:10px;overflow:hidden}
+  .product .img img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
+  .product:hover .img img{transform:scale(1.08)}
+  .product h3{color:#fff;margin:0;font-size:18px}
+  .product p{color:var(--muted);font-size:14px;margin-top:auto}
+  .meta{display:flex;justify-content:space-between;align-items:center}
+  .price{font-weight:900;background:linear-gradient(90deg,var(--gold-1),var(--gold-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .buy{padding:8px 12px;border-radius:10px;border:0;background:var(--accent-warm);color:#111;font-weight:800;cursor:pointer;transition:transform .18s}
+  .buy:active{transform:scale(.98)}
+
+  .badge{position:absolute;left:12px;top:12px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.06);color:var(--accent-neon);font-weight:800;border:1px solid rgba(255,255,255,0.05);backdrop-filter: blur(6px)}
+
+  /* Offers big cards */
+  .offers{display:flex;gap:18px}
+  .offer{flex:1;border-radius:14px;padding:22px;color:#fff;min-height:180px;position:relative;overflow:hidden;background-size:cover;background-position:center;transition:transform .28s}
+  .offer:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.45));mix-blend-mode:multiply}
+  .offer .tag{position:relative;background:rgba(255,255,255,0.08);padding:8px 10px;border-radius:8px;font-weight:800;color:var(--gold-1)}
+  .offer h2{position:relative;margin-top:34px;font-size:28px;text-shadow:0 6px 20px rgba(0,0,0,0.6)}
+  .offer .shop{position:relative;margin-top:12px;display:inline-block;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.07);text-decoration:none;color:#fff}
+
+  /* Contact / form (glass) */
+  .contact{margin-top:30px;border-radius:14px;padding:22px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04)}
+  .contact h3{color:var(--accent-neon);margin-bottom:8px}
+  .contact form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .contact input,.contact textarea{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;outline:none}
+  .contact textarea{grid-column:1/3;min-height:120px;resize:vertical}
+  .send{grid-column:1/3;padding:12px;border-radius:10px;background:linear-gradient(90deg,var(--gold-1),var(--gold-2));border:0;color:#111;font-weight:800;cursor:pointer}
+
+  /* Footer */
+  footer{margin-top:28px;padding:20px;border-radius:12px;text-align:center;color:var(--muted)}
+  footer .links{display:flex;gap:14px;justify-content:center;margin-bottom:12px}
+  footer a{color:inherit;text-decoration:none;border-bottom:1px dashed rgba(255,255,255,0.02);padding-bottom:2px}
+
+  /* Micro animations */
+  @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+  .float{animation:floaty 4s ease-in-out infinite}
+
+  /* responsive */
+  @media (max-width:1000px){
+    .products{grid-template-columns:repeat(2,1fr)}
+    .visual{width:260px;height:180px}
+    .hero{flex-direction:column;align-items:flex-start}
+  }
+  @media (max-width:720px){
+    .wrap{padding:0 12px}
+    .main{grid-template-columns:1fr;gap:18px}
+    .category{order:2}
+    .products{grid-template-columns:1fr}
+    .contact form{grid-template-columns:1fr}
+    .visual{width:100%}
+  }
+
+  /* Light theme tweaks */
+  body.light .product h3{color:#4d2f16}
+  body.light .product p{color:#5b4638}
+  body.light .badge{background:rgba(0,0,0,0.04);color:var(--accent-warm)}
+</style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- Top Header -->
+    <div class="top">
+      <div class="brand" onclick="scrollToSection('home')">
+        <div class="logo">F</div>
+        <div class="title">
+          <span class="name">F Food</span>
+          <span class="tag">Fresh • Fast • Fancy</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="search">
+          <input id="searchInput" placeholder="Search dishes, pizza, chicken..." aria-label="Search input">
+          <button id="searchBtn">🔍</button>
+        </div>
+
+        <button class="action-btn" id="cartBtn" title="Cart">Cart • 0</button>
+        <button class="order" id="orderBtn">Order Now</button>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <main class="main">
+
+      <!-- Left: categories -->
+      <aside class="category" id="leftCategories">
+        <h4>Categories</h4>
+        <ul>
+          <li onclick="filterCategory('Pizza')">🍕 Pizza</li>
+          <li onclick="filterCategory('Waffles')">🧇 Waffles</li>
+          <li onclick="filterCategory('Bowls')">🍜 Bowls</li>
+          <li onclick="filterCategory('Pancakes')">🥞 Pancakes</li>
+          <li onclick="filterCategory('Burrito')">🌯 Burrito</li>
+          <li onclick="filterCategory('Chicken')">🍗 Crispy Chicken</li>
+          <li onclick="filterCategory('Cheese')">🧀 Cheese</li>
+          <li onclick="filterCategory('Meat')">🥩 Meat</li>
+        </ul>
+
+        <div style="height:12px"></div>
+        <h4 style="margin-top:10px;color:var(--accent-neon)">Quick Filters</h4>
+        <ul>
+          <li onclick="applyFilter('top')">⭐ Top Rated</li>
+          <li onclick="applyFilter('free')">🚚 Free Delivery</li>
+          <li onclick="applyFilter('fast')">⏱ Ready in 30 min</li>
+          <li onclick="applyFilter('cheap')">💰 Under $10</li>
+        </ul>
+      </aside>
+
+      <!-- Right: content (home/shop/offers/contact in one page) -->
+      <section>
+
+        <!-- NAV ROW (smooth scroll links) -->
+        <div class="nav-row">
+          <div class="menu">
+            <a href="#home" onclick="scrollToSection('home')">Home</a>
+            <a href="#shop" onclick="scrollToSection('shop')">Shop</a>
+            <a href="#offers" onclick="scrollToSection('offers')">Offers</a>
+            <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
+          </div>
+          <div style="font-size:13px;color:var(--muted)">Delivery to <strong style="color:var(--accent-neon);margin-left:6px">Your City</strong></div>
+        </div>
+
+        <!-- ========== HOME / HERO ========== -->
+        <div id="home" class="hero float" style="margin-bottom:18px">
+          <div class="copy">
+            <h1>Delicious meals • delivered fast</h1>
+            <p>Artisan pizzas, crispy wings, chef-curated bowls — premium ingredients, playful vibes, luxury finish.</p>
+            <div class="cta">
+              <a class="primary" href="#shop" onclick="scrollToSection('shop')">Order Signature</a>
+              <a class="secondary" href="#offers" onclick="scrollToSection('offers')">See Offers</a>
+            </div>
+          </div>
+          <div class="visual">
+            <img src="banner.webp" alt="Hero banner" onerror="this.src='https://via.placeholder.com/600x400?text=Banner'">
+          </div>
+        </div>
+
+        <!-- ========== FEATURES ========== -->
+        <div class="features">
+          <div class="feature-card">
+            <h5>Premium Ingredients</h5>
+            <div>Locally-sourced produce, imported cheeses.</div>
+          </div>
+          <div class="feature-card">
+            <h5>Speedy Delivery</h5>
+            <div>Lightning-fast dispatch with real-time tracking.</div>
+          </div>
+          <div class="feature-card">
+            <h5>Chef's Menu</h5>
+            <div>Seasonal specials crafted by our head chef.</div>
+          </div>
+        </div>
+
+        <!-- ========== SHOP ========== -->
+        <h2 id="shop" style="margin:12px 0 8px;color:var(--accent-neon)">Shop</h2>
+        <div class="products" id="productsGrid">
+          <!-- product template items, expandable -->
+          <article class="product" data-category="Pizza" data-price="7.99" data-name="Home Made Pizza">
+            <div class="badge">NEW</div>
+            <div class="img"><img src="item1.webp" alt="Home made pizza" onerror="this.src='https://via.placeholder.com/600x400?text=Pizza'"></div>
+            <h3>Home Made Pizza</h3>
+            <p>Stone-baked pizza with tomato sauce, basil & mozzarella.</p>
+            <div class="meta">
+              <div class="price">$7.99</div>
+              <button class="buy" onclick="addToCart('Home Made Pizza',7.99)">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-category="Pizza" data-price="6.49" data-name="Salad Pizza">
+            <div class="badge">TOP</div>
+            <div class="img"><img src="item2.webp" alt="Salad pizza" onerror="this.src='https://via.placeholder.com/600x400?text=Salad'"></div>
+            <h3>Salad Pizza</h3>
+            <p>Light — crisp greens, feta & lemon oil drizzle.</p>
+            <div class="meta">
+              <div class="price">$6.49</div>
+              <button class="buy" onclick="addToCart('Salad Pizza',6.49)">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-category="Chicken" data-price="8.50" data-name="Crispy Chicken">
+            <div class="badge">HOT</div>
+            <div class="img"><img src="item3.webp" alt="Crispy chicken" onerror="this.src='https://via.placeholder.com/600x400?text=Chicken'"></div>
+            <h3>Crispy Chicken</h3>
+            <p>Double-breaded, crunchy exterior, juicy inside.</p>
+            <div class="meta">
+              <div class="price">$8.50</div>
+              <button class="buy" onclick="addToCart('Crispy Chicken',8.50)">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-category="Waffles" data-price="5.25" data-name="Belgian Waffle">
+            <div class="img"><img src="https://via.placeholder.com/600x400?text=Waffle" alt="Waffle"></div>
+            <h3>Belgian Waffle</h3>
+            <p>Fluffy waffles with maple syrup & whipped cream.</p>
+            <div class="meta">
+              <div class="price">$5.25</div>
+              <button class="buy" onclick="addToCart('Belgian Waffle',5.25)">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-category="Bowls" data-price="9.00" data-name="Steamy Bowl">
+            <div class="img"><img src="https://via.placeholder.com/600x400?text=Bowl" alt="Bowl"></div>
+            <h3>Steamy Bowl</h3>
+            <p>Warm broth, noodles, grilled vegetables.</p>
+            <div class="meta">
+              <div class="price">$9.00</div>
+              <button class="buy" onclick="addToCart('Steamy Bowl',9.00)">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-category="Pancakes" data-price="4.50" data-name="Fluffy Pancakes">
+            <div class="img"><img src="https://via.placeholder.com/600x400?text=Pancakes" alt="Pancakes"></div>
+            <h3>Fluffy Pancakes</h3>
+            <p>Classic stack with butter & syrup.</p>
+            <div class="meta">
+              <div class="price">$4.50</div>
+              <button class="buy" onclick="addToCart('Fluffy Pancakes',4.50)">Add</button>
+            </div>
+          </article>
+        </div>
+
+        <!-- ========== OFFERS ========== -->
+        <h2 id="offers" style="margin:12px 0 8px;color:var(--accent-neon)">Offers</h2>
+        <div class="offers">
+          <div class="offer" style="background-image:url('offer1.jfif')" onclick="scrollToSection('shop')">
+            <div class="tag">20% OFF</div>
+            <h2>Pizza Collection</h2>
+            <a class="shop" href="#shop" onclick="scrollToSection('shop')">Shop Now</a>
+          </div>
+          <div class="offer" style="background-image:url('offer2.webp')" onclick="scrollToSection('shop')">
+            <div class="tag">FLASH</div>
+            <h2>Burger Bonanza</h2>
+            <a class="shop" href="#shop" onclick="scrollToSection('shop')">Shop Now</a>
+          </div>
+        </div>
+
+        <!-- ========== CONTACT ========== -->
+        <h2 id="contact" style="margin:18px 0 8px;color:var(--accent-neon)">Contact Us</h2>
+        <div class="contact">
+          <div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px">
+            <div style="flex:1;min-width:180px">
+              <strong style="color:var(--accent-neon)">Address</strong>
+              <div style="opacity:.9">123 Food Street, Your City</div>
+            </div>
+            <div style="flex:1;min-width:180px">
+              <strong style="color:var(--accent-neon)">Hours</strong>
+              <div style="opacity:.9">Daily: 10:00 — 23:00</div>
+            </div>
+            <div style="flex:1;min-width:180px">
+              <strong style="color:var(--accent-neon)">Phone</strong>
+              <div style="opacity:.9">+92 300 0000000</div>
+            </div>
+          </div>
+
+          <form id="contactForm" onsubmit="submitContact(event)">
+            <input type="text" id="fname" placeholder="Full name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="text" id="subject" placeholder="Subject" required>
+            <input type="text" id="phone" placeholder="Phone">
+            <textarea id="message" placeholder="Your message..." required></textarea>
+            <button class="send" type="submit">Send Message</button>
+          </form>
+        </div>
+
+        <!-- mini CTA footer block -->
+        <div style="margin-top:20px;padding:14px;border-radius:12px;background:linear-gradient(90deg, rgba(255,122,24,0.05), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04)">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+            <div><strong style="color:var(--accent-neon)">Limited Time</strong> — Free delivery on orders above <strong style="background:linear-gradient(90deg,var(--gold-1),var(--gold-2));-webkit-background-clip:text;color:transparent">₹1200</strong></div>
+            <div><a class="shop" href="#shop" onclick="scrollToSection('shop')" style="background:var(--accent-warm);padding:10px 14px;border-radius:10px;color:#111;text-decoration:none">Claim Offer</a></div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="links">
+        <a href="#home" onclick="scrollToSection('home')">Home</a>
+        <a href="#shop" onclick="scrollToSection('shop')">Shop</a>
+        <a href="#offers" onclick="scrollToSection('offers')">Offers</a>
+        <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
+      </div>
+      <div style="font-size:13px;opacity:.8">© <strong>F Food</strong> • Crafted with ♥ • Premium UI</div>
+    </footer>
+
+  </div>
+
+<!-- ================= JS: micro interactions ================= -->
+<script>
+  // Smooth scroll helper
+  function scrollToSection(id){
+    const el = document.getElementById(id);
+    if(!el){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // Theme toggler
+  const themeBtn = document.getElementById('themeToggle');
+  themeBtn.addEventListener('click', ()=> {
+    document.body.classList.toggle('light');
+    themeBtn.textContent = document.body.classList.contains('light') ? '🌞' : '🌙';
+  });
+
+  // Simple cart
+  let cartCount = 0;
+  const cartBtn = document.getElementById('cartBtn');
+  function addToCart(name, price){
+    cartCount++;
+    cartBtn.innerText = 'Cart • ' + cartCount;
+    // small toast
+    const t = document.createElement('div');
+    t.innerText = name + ' added';
+    Object.assign(t.style, {position:'fixed',right:'18px',bottom:'18px',background:'linear-gradient(90deg,#ff7a18,#ffd57f)',color:'#111',padding:'10px 14px',borderRadius:'10px',boxShadow:'0 10px 30px rgba(0,0,0,0.4)',zIndex:9999});
+    document.body.appendChild(t);
+    setTimeout(()=> t.remove(),1200);
+  }
+
+  // Search behavior
+  document.getElementById('searchBtn').addEventListener('click', ()=>{
+    const q = document.getElementById('searchInput').value.trim();
+    if(!q) { alert('Type something to search.'); return; }
+    // simple filter: highlight products that contain query
+    const products = document.querySelectorAll('.product');
+    let found=false;
+    products.forEach(p=>{
+      const name = p.dataset.name.toLowerCase();
+      if(name.includes(q.toLowerCase())){ p.style.boxShadow='0 40px 80px rgba(0,0,0,0.7)'; found=true; }
+      else p.style.boxShadow='';
+    });
+    if(!found) alert('No products found for: ' + q);
+  });
+
+  // Contact form
+  function submitContact(e){
+    e.preventDefault();
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const msg = document.getElementById('message').value.trim();
+    if(!name || !email || !msg) { alert('Please fill required fields.'); return; }
+    // fake sending
+    const btn = document.querySelector('.send');
+    btn.disabled = true;
+    btn.innerText = 'Sending...';
+    setTimeout(()=>{
+      btn.disabled=false;
+      btn.innerText='Send Message';
+      alert('Thanks ' + name + '! We received your message.');
+      document.getElementById('contactForm').reset();
+    },1000);
+  }
+
+  // filter category quick helpers
+  function filterCategory(cat){
+    const all = document.querySelectorAll('.product');
+    all.forEach(p => {
+      if(p.dataset.category && p.dataset.category.toLowerCase().includes(cat.toLowerCase())) p.style.display='flex';
+      else p.style.display = 'none';
+    });
+  }
+  function applyFilter(key){
+    const all = document.querySelectorAll('.product');
+    all.forEach(p => p.style.display='flex');
+    if(key === 'free'){
+      // show items under $7 as "free eligible"
+      all.forEach(p => +p.dataset.price <= 7 ? p.style.display='flex' : p.style.display='none');
+    } else if(key === 'cheap'){
+      all.forEach(p => +p.dataset.price <= 6 ? p.style.display='flex' : p.style.display='none');
+    } else if(key === 'top'){
+      all.forEach(p => p.querySelector('.badge').innerText.toLowerCase().includes('top') ? p.style.display='flex' : p.style.display='none');
+    } else if(key === 'fast'){
+      // mock: show first 3
+      all.forEach((p,i) => i<3 ? p.style.display='flex' : p.style.display='none');
+    }
+  }
+
+  // keyboard enter search
+  document.getElementById('searchInput').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') document.getElementById('searchBtn').click();
+  });
+
+  // accessibility: add focus outlines when tabbing
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Tab') document.body.classList.add('user-tab');
+  });
+</script>
+</body>
+</html>
